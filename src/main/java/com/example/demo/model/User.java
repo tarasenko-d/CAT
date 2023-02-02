@@ -1,10 +1,11 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 
 @Setter
@@ -16,44 +17,40 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false, unique = true, length = 25)
     private String login;
     @Column(nullable = false, length = 35)
     private String password;
+    private String userPicture;
 
-    @OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
-    private Set<Event> createdEvents;
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    private List<Event> createdEvents;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Tag> favouriteTags;
 
     @JoinTable(name = "user_event",
-               joinColumns = {@JoinColumn(name = "user_id")},
-               inverseJoinColumns = {@JoinColumn(name = "event_id")})
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "event_id")})
     @ManyToMany
-    private Set<Event> addedEvents = new HashSet<>(0);
+    private List<Event> addedEvents;
 
-
-    public void addCreatedEvent(Event event) {
-        createdEvents.add(event);
-        event.setCreator(this);
-    }
-
-    public void removeCreatedEvent(Event event) {
-        createdEvents.remove(event);
-        event.setCreator(null);
-    }
-
-    public void followEvent(Event event){
-        addedEvents.add(event);
-        event.addMember(this);
-    }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", createdEvents=" + createdEvents +
-                ", addedEvents=" + addedEvents +
-                '}';
+        return "User[" + id +
+                "] login = " + login;
     }
+
+    public String fullString() {
+        return "User[" + id +
+                "]\n  login = " + login +
+                "\n  password = " + password +
+                "\n  userPicture = " + userPicture +
+                "\n  createdEvents = " + createdEvents +
+               // "\n  favouriteTag=" + favouriteTag +
+                "\n  addedEvents = " + addedEvents;
+    }
+
+
 }

@@ -12,15 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Demo1Application {
 
-    final UserService userService;
-    final EventService eventService;
+   private EventService eventService;
+   private UserService userService;
 
-    @Autowired
-    public Demo1Application(UserService userService, EventService eventService) {
-        this.userService = userService;
+    public Demo1Application(EventService eventService,UserService userService) {
         this.eventService = eventService;
+        this.userService = userService;
     }
-
 
     public static void main(String[] args) {
         SpringApplication.run(Demo1Application.class, args);
@@ -33,17 +31,37 @@ public class Demo1Application {
         userA.setLogin("A");
         userA.setPassword("aaa");
 
+        userService.saveUser(userA);
+
         Event eventA = new Event();
         eventA.setTitle("event A");
         eventA.setLatitude(11);
         eventA.setLongitude(11);
+        eventA.setCreator(userA);
 
-        userA.addCreatedEvent(eventA);
+        eventService.saveEvent(eventA);
 
-        userService.save(userA);
-        eventService.save(eventA);
+        User userC = new User();
+        userC.setLogin("C");
+        userC.setPassword("ccc");
 
-        System.out.println("------\n" + userService.getAllWithEvents() + "\n -----");
-        System.out.println("------\n" + eventService.getAllWithMembers() + "\n -----");
+        userService.saveUser(userC);
+        userService.followEvent(userC.getId(),eventA.getId());
+
+        System.out.println(userService.getUserById(1L));
+        User uzzzer = userService.getUserByLogin("C");
+        System.out.println(uzzzer);
+
+        System.out.println("-----\n");
+        for (User user :
+                userService.getFullUsers()) {
+            System.out.println(user.fullString());
+        }
+        System.out.println("-----\n");
+        for (Event event :
+                eventService.getFullEvent()) {
+            System.out.println(event.fullString());
+        }
+        System.out.println("-----");
     }
 }

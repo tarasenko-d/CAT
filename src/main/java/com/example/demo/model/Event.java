@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -28,28 +29,32 @@ public class Event {
     @JoinTable(name = "user_event",
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private Set<User> members = new HashSet<>(0);
+    private List<User> members;
 
+    @ManyToMany
+    @JoinTable(name = "event_tag",
+            joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+    private List<Tag> tags;
 
-    public void setCreator(User user) {
-        this.creator = user;
-        members.add(user);
-    }
-
-    public void addMember(User user){
-        members.add(user);
-    }
 
     @Override
     public String toString() {
         return "Event{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                ", title='" + title +
                 ", creator=[" + creator.getId() +
                 "] " + creator.getLogin() +
-                ", members=" + members.size() +
                 '}';
+    }
+
+    public String fullString() {
+        return "Event[" +id +
+                "]\n title = " + title +
+                "\n latitude = " + latitude +
+                "\n longitude = " + longitude +
+                "\n creator = User[" + creator.getId() +
+                "] " + creator.getLogin() +
+                "\n members:\n " + members;
     }
 }
