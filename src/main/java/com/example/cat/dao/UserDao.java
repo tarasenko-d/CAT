@@ -1,10 +1,11 @@
-package com.example.demo.dao;
+package com.example.cat.dao;
 
-import com.example.demo.model.User;
+import com.example.cat.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
 
 @Repository
 public interface UserDao extends CrudRepository<User, Long> {

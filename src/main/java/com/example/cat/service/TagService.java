@@ -1,41 +1,34 @@
-package com.example.demo.service;
+package com.example.cat.service;
 
-import com.example.demo.dao.TagDao;
-import com.example.demo.exception.NoSuchEntryException;
-import com.example.demo.model.Tag;
-import com.example.demo.model.TagClass;
-import com.example.demo.model.User;
+import com.example.cat.dao.TagDao;
+import com.example.cat.exception.NoSuchEntryException;
+import com.example.cat.model.Tag;
+import com.example.cat.model.TagClass;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.CustomEditorConfigurer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TagServiceImpl implements TagService {
+public class TagService {
 
     private final TagDao tagDao;
-
-    public TagServiceImpl(TagDao tagDao) {
+    public TagService(TagDao tagDao) {
         this.tagDao = tagDao;
     }
 
 
-    @Override
     public void saveTag(Tag tag) {
         tagDao.save(tag);
     }
 
-    @Override
     public void deleteTag(Tag tag) {
         tagDao.delete(tag);
     }
 
     @Transactional
-    @Override
     public void editTag(Tag tagEdit) {
         Optional<Tag> tagOptional = tagDao.findById(tagEdit.getId());
         if (tagOptional.isEmpty()) {
@@ -49,13 +42,11 @@ public class TagServiceImpl implements TagService {
         tagDao.save(tag);
     }
 
-    @Override
     public List<Tag> getAllTags() {
         return (List<Tag>) tagDao.findAll();
     }
 
     @Transactional
-    @Override
     public List<Tag> getAllTagsWithEvents() {
         List<Tag> tags = (List<Tag>) tagDao.findAll();
         for (Tag tag : tags){
@@ -64,8 +55,7 @@ public class TagServiceImpl implements TagService {
         return tags;
     }
 
-    @Override
-    public List<Tag> getAllTagsByClass(TagClass tagClass) {
-        return tagDao.getTagsByTagClass(tagClass);
+    public List<Tag> getAllTagsByClass(TagClass tagClassEnum) {
+        return tagDao.getTagsByTagClass(tagClassEnum);
     }
 }

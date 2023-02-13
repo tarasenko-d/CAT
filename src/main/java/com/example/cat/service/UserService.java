@@ -1,10 +1,10 @@
-package com.example.demo.service;
+package com.example.cat.service;
 
-import com.example.demo.dao.EventDao;
-import com.example.demo.dao.UserDao;
-import com.example.demo.exception.NoSuchEntryException;
-import com.example.demo.model.Event;
-import com.example.demo.model.User;
+import com.example.cat.dao.EventDao;
+import com.example.cat.dao.UserDao;
+import com.example.cat.exception.NoSuchEntryException;
+import com.example.cat.model.Event;
+import com.example.cat.model.User;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
@@ -13,31 +13,27 @@ import java.util.List;
 import java.util.Optional;
 
 
-//TODO Get methods for uni user throws LazyInitExcp -> decide where need to initialize
 @Service
-public class UserServiceImpl implements UserService {
+public class UserService{
 
     private final EventDao eventDao;
     private final UserDao userDao;
 
-    public UserServiceImpl(EventDao eventDao, UserDao userDao) {
+    public UserService(EventDao eventDao, UserDao userDao) {
         this.eventDao = eventDao;
         this.userDao = userDao;
     }
 
-    @Override
     public void saveUser(User user) {
         userDao.save(user);
         System.out.println("---- \n User [" + user.getLogin() + "] has been saved");
     }
 
-    @Override
     public void delete(User user) {
         userDao.delete(user);
     }
 
     @Transactional
-    @Override
     public void edit(User editUser) {
         Optional<User> userOptional = userDao.getUserById(editUser.getId());
         if (userOptional.isEmpty()) {
@@ -52,13 +48,12 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
     }
 
-    @Override
+
     public List<User> getUsers() {
         return (List<User>) userDao.findAll();
     }
 
     @Transactional
-    @Override
     public List<User> getFullUsers() {
         List<User> result = (List<User>) userDao.findAll();
         for (User user : result) {
@@ -70,7 +65,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    @Override
     public List<User> getUsersWithAddedEvents() {
         List<User> result = (List<User>) userDao.findAll();
         for (User user : result) {
@@ -80,7 +74,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    @Override
     public List<User> getUsersWithCreatedEvents() {
         List<User> result = (List<User>) userDao.findAll();
         for (User user : result) {
@@ -90,7 +83,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    @Override
     public void followEvent(Long userId, Long eventId) {
         Optional<User> userOptional = userDao.findById(userId);
         Optional<Event> eventOptional = eventDao.findById(eventId);
@@ -105,7 +97,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    @Override
     public void unfollowEvent(Long userId, Long eventId) {
         Optional<User> userOptional = userDao.findById(userId);
         Optional<Event> eventOptional = eventDao.findById(eventId);
@@ -119,12 +110,12 @@ public class UserServiceImpl implements UserService {
         userDao.save(user);
     }
 
-    @Override
+
     public User getUserById(Long id) {
         return userDao.findById(id).orElseThrow(NoSuchEntryException::new);
     }
 
-    @Override
+
     public User getUserByLogin(String name) {
         return userDao.getUserByLogin(name);
     }

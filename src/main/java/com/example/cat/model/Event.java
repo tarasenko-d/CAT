@@ -1,12 +1,11 @@
-package com.example.demo.model;
+package com.example.cat.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Setter
 @Getter
@@ -15,11 +14,14 @@ import java.util.Set;
 @Table(name = "events")
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
+    @Column(nullable = false, length = 50)
     private String title;
-    private int latitude;
-    private int longitude;
+    @Column(nullable = false)
+    private float latitude;
+    @Column(nullable = false)
+    private float longitude;
 
     @ManyToOne
     @JoinColumn(name = "creator_id")

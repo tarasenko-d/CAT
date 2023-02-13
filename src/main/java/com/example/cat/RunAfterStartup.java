@@ -1,32 +1,27 @@
-package com.example.demo;
+package com.example.cat;
 
-import com.example.demo.model.Event;
-import com.example.demo.model.User;
-import com.example.demo.service.EventService;
-import com.example.demo.service.UserService;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class Demo1Application {
+import com.example.cat.model.Event;
+import com.example.cat.model.User;
+import com.example.cat.service.EventService;
+import com.example.cat.service.UserService;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
-   private EventService eventService;
-   private UserService userService;
+@Component
+public class RunAfterStartup {
 
-    public Demo1Application(EventService eventService,UserService userService) {
+    private EventService eventService;
+    private UserService userService;
+
+    public RunAfterStartup(EventService eventService, UserService userService) {
         this.eventService = eventService;
         this.userService = userService;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(Demo1Application.class, args);
-    }
-
-    @PostConstruct
-    public void doStuff() {
-
+    @EventListener(ApplicationReadyEvent.class)
+    public void runAfterStartup() {
         User userA = new User();
         userA.setLogin("A");
         userA.setPassword("aaa");
@@ -59,9 +54,10 @@ public class Demo1Application {
         }
         System.out.println("-----\n");
         for (Event event :
-                eventService.getFullEvent()) {
+                eventService.getFullInitializeEvents()) {
             System.out.println(event.fullString());
         }
         System.out.println("-----");
     }
+
 }

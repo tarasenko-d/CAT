@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.cat.model;
 
 import lombok.NoArgsConstructor;
 
@@ -9,5 +9,6 @@ public enum TagClass {
     POPCULTURE,
     HOBBY,
     PASTTIME
+
 }
 

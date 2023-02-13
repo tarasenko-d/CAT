@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.cat.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,8 +14,9 @@ import java.util.List;
 @Table(name = "tags")
 public class Tag {
     @Id
-    private Long id;
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
+    @Column(nullable = false, unique = true, length = 25)
     private String tagName;
 
     @Enumerated(EnumType.STRING)
@@ -25,6 +26,5 @@ public class Tag {
             joinColumns = {@JoinColumn(name = "tag_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private List<Event> events;
-
 
 }
