@@ -1,5 +1,6 @@
 package com.example.cat.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,10 +25,12 @@ public class Event {
     private float longitude;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "creator_id")
     private User creator;
 
     @ManyToMany
+    @JsonBackReference
     @JoinTable(name = "user_event",
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})

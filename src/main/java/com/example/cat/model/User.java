@@ -1,5 +1,6 @@
 package com.example.cat.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,11 @@ public class User {
     private String userPicture;
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Event> createdEvents;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Tag> favouriteTags;
 
     @JoinTable(name = "user_event",

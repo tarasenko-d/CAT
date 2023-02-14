@@ -18,6 +18,7 @@ public interface TagMapper {
     @Named("tagDtoToTag")
     default Tag tagDtoToTag(TagDto tagDto) {
         Tag tag = new Tag();
+        tag.setTagName(tagDto.getTagName());
         tag.setTagClass(TagClass.valueOf(tagDto.getTagName()));
         return tag;
     }
@@ -25,7 +26,8 @@ public interface TagMapper {
     @Named("tagToTagDto")
     default TagDto tagToTagDto(Tag tag) {
         TagDto tagDto = new TagDto();
-        tagDto.setTagClass(tag.getTagName());
+        tagDto.setTagName(tag.getTagName());
+        tagDto.setTagClass(tag.getTagClass().name());
         return tagDto;
     }
 

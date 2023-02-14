@@ -48,15 +48,23 @@ public class EventService {
     }
 
     public List<Event> getEvents() {
-        return (List<Event>) eventDao.findAll();
+        List<Event> events = (List<Event>) eventDao.findAll();
+        for (Event event : events) {
+            ////TODO HOW TO INITIALIZE BETTER - JUST ALL MEMBERS OR MEMBERS CONT ONLY
+            Hibernate.initialize(event.getTags());
+        }
+        return events;
     }
 
     public Event getEventById(long eventId) {
-        Optional<Event> event = eventDao.findById(eventId);
-        if(event.isEmpty()){
-            throw new NoSuchEntryException("No event with id="+eventId+";");
+        Optional<Event> eventOptional = eventDao.findById(eventId);
+        if (eventOptional.isEmpty()) {
+            throw new NoSuchEntryException("No event with id=" + eventId + ";");
         }
-        return event.get();
+        Event event = eventOptional.get();
+        Hibernate.initialize(event.getMembers());
+        Hibernate.initialize(event.getTags());
+        return event;
     }
 
     @Transactional
@@ -72,7 +80,7 @@ public class EventService {
 
     public List<Event> getEventsByTitle(String title) {
         List<Event> events = eventDao.getEventsByTitle(title);
-        if (events.isEmpty()){
+        if (events.isEmpty()) {
             throw new NoSuchEntryException();
         }
         return events;

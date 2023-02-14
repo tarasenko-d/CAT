@@ -1,5 +1,6 @@
 package com.example.cat.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +22,13 @@ public class Tag {
 
     @Enumerated(EnumType.STRING)
     private TagClass tagClass;
-    @ManyToMany
+
+
+   /* @ManyToMany
+    @JsonManagedReference
     @JoinTable(name = "event_tag",
             joinColumns = {@JoinColumn(name = "tag_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
-    private List<Event> events;
+    private List<Event> events;*/
 
 }

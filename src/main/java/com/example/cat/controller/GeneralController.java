@@ -34,8 +34,7 @@ public class GeneralController {
 
     @GetMapping("/rest/events")
     public List<EventDto> getEventList() {
-        List<EventDto> eventListDto = eventMapper.eventsToEventsDto(eventService.getEvents());
-        return eventListDto;
+        return  eventMapper.lazyEventsToEventsDto(eventService.getEvents());
     }
 
     /* @GetMapping("/rest/events")
@@ -59,6 +58,7 @@ public class GeneralController {
         Event event = eventMapper.eventDtoToEvent(eventDto);
         eventService.saveEvent(event);
     }
+
 
 
 

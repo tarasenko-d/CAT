@@ -38,7 +38,7 @@ public class TagService {
         Tag tag = tagOptional.get();
         if (tagEdit.getTagName() != null) tag.setTagName(tagEdit.getTagName());
         if (tagEdit.getTagClass() != null) tag.setTagClass(tagEdit.getTagClass());
-        if (tagEdit.getEvents() != null) tag.setEvents(tagEdit.getEvents());
+      //  if (tagEdit.getEvents() != null) tag.setEvents(tagEdit.getEvents());
         tagDao.save(tag);
     }
 
@@ -49,9 +49,9 @@ public class TagService {
     @Transactional
     public List<Tag> getAllTagsWithEvents() {
         List<Tag> tags = (List<Tag>) tagDao.findAll();
-        for (Tag tag : tags){
+      /*  for (Tag tag : tags){
             Hibernate.initialize(tag.getEvents());
-        }
+        }*/
         return tags;
     }
 
