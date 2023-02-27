@@ -2,10 +2,8 @@ package com.example.cat.mapper;
 
 import com.example.cat.dto.EventDto;
 import com.example.cat.dto.TagDto;
-import com.example.cat.dto.UserDto;
 import com.example.cat.model.Event;
 import com.example.cat.model.Tag;
-import com.example.cat.model.User;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -21,13 +19,7 @@ public interface EventMapper {
 
 
     @Named("eventToEventDto")
-    EventDto eventToEventDto(Event event);
-
-    @Named("eventDtoToEvent")
-    Event eventDtoToEvent(EventDto eventDto);
-
-    @Named("lazyEventToEventDto")
-    default EventDto lazyEventToEventDto(Event event) {
+    default EventDto eventToEventDto(Event event) {
         if (event == null) {
             return null;
         }
@@ -38,36 +30,34 @@ public interface EventMapper {
         eventDto.setTitle(event.getTitle());
         eventDto.setLatitude(event.getLatitude());
         eventDto.setLongitude(event.getLongitude());
-        eventDto.setCreator(lazyUserToUserDto(event.getCreator()));
+        eventDto.setCreatorId(event.getCreator().getId());
+        eventDto.setCreatorName(event.getCreator().getLogin());
+        eventDto.setMembers(event.getMembers());
+
         List<TagDto> dtoList = new ArrayList<>();
         for (Tag tag : event.getTags()) {
-          TagDto tagDto = new TagDto(tag.getTagName(),tag.getTagClass().name());
-          dtoList.add(tagDto);
+            TagDto tagDto = new TagDto(tag.getTagName(), tag.getTagClass().name());
+            dtoList.add(tagDto);
         }
+
         eventDto.setTags(dtoList);
 
         return eventDto;
+
     }
 
+
+    @Named("eventDtoToEvent")
+    Event eventDtoToEvent(EventDto eventDto);
 
     @IterableMapping(qualifiedByName = "eventDtoToEvent")
     List<Event> eventsDtoToEvents(List<EventDto> usersDto);
 
+    @IterableMapping(qualifiedByName = "eventToEventDto")
+    List<EventDto> eventsToEventsDto(List<Event> users);
+
     @IterableMapping(qualifiedByName = "lazyEventToEventDto")
-    List<EventDto> lazyEventsToEventsDto(List<Event> events);
+    List<Event> lazyEventsToEventsDto(List<Event> events);
 
-
-    default UserDto lazyUserToUserDto(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        UserDto userDto = new UserDto();
-
-        userDto.setId(user.getId());
-        userDto.setLogin(user.getLogin());
-
-        return userDto;
-    }
 
 }

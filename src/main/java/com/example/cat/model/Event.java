@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -20,9 +21,11 @@ public class Event {
     @Column(nullable = false, length = 50)
     private String title;
     @Column(nullable = false)
-    private float latitude;
+    private double latitude;
     @Column(nullable = false)
-    private float longitude;
+    private double longitude;
+    @Column(nullable = false)
+    private LocalDateTime dateTime;
 
     @ManyToOne
     @JsonBackReference

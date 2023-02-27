@@ -3,9 +3,7 @@ package com.example.cat.service;
 import com.example.cat.dao.TagDao;
 import com.example.cat.exception.NoSuchEntryException;
 import com.example.cat.model.Tag;
-import com.example.cat.model.TagClass;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,7 +36,6 @@ public class TagService {
         Tag tag = tagOptional.get();
         if (tagEdit.getTagName() != null) tag.setTagName(tagEdit.getTagName());
         if (tagEdit.getTagClass() != null) tag.setTagClass(tagEdit.getTagClass());
-      //  if (tagEdit.getEvents() != null) tag.setEvents(tagEdit.getEvents());
         tagDao.save(tag);
     }
 
@@ -46,16 +43,7 @@ public class TagService {
         return (List<Tag>) tagDao.findAll();
     }
 
-    @Transactional
-    public List<Tag> getAllTagsWithEvents() {
-        List<Tag> tags = (List<Tag>) tagDao.findAll();
-      /*  for (Tag tag : tags){
-            Hibernate.initialize(tag.getEvents());
-        }*/
-        return tags;
-    }
-
-    public List<Tag> getAllTagsByClass(TagClass tagClassEnum) {
+    public List<Tag> getAllTagsByClass(Tag.TagClass tagClassEnum) {
         return tagDao.getTagsByTagClass(tagClassEnum);
     }
 }

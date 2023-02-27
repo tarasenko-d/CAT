@@ -50,7 +50,8 @@ public class EventService {
     public List<Event> getEvents() {
         List<Event> events = (List<Event>) eventDao.findAll();
         for (Event event : events) {
-            ////TODO HOW TO INITIALIZE BETTER - JUST ALL MEMBERS OR MEMBERS CONT ONLY
+            Hibernate.initialize(event.getCreator());
+            Hibernate.initialize(event.getMembers());
             Hibernate.initialize(event.getTags());
         }
         return events;
@@ -85,9 +86,5 @@ public class EventService {
         }
         return events;
     }
-
-   /* public List<Event> getEventsByTagsContains(List<Tag> tags) {
-        return eventDao.getEventsByTagsContains(tags);
-    }*/
 
 }

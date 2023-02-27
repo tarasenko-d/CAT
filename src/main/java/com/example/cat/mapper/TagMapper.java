@@ -3,7 +3,6 @@ package com.example.cat.mapper;
 
 import com.example.cat.dto.TagDto;
 import com.example.cat.model.Tag;
-import com.example.cat.model.TagClass;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -19,7 +18,7 @@ public interface TagMapper {
     default Tag tagDtoToTag(TagDto tagDto) {
         Tag tag = new Tag();
         tag.setTagName(tagDto.getTagName());
-        tag.setTagClass(TagClass.valueOf(tagDto.getTagName()));
+        tag.setTagClass(Tag.TagClass.valueOf(tagDto.getTagName()));
         return tag;
     }
 
