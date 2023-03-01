@@ -6,8 +6,10 @@ import com.example.cat.model.Tag;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TagService {
@@ -40,10 +42,34 @@ public class TagService {
     }
 
     public List<Tag> getAllTags() {
-        return (List<Tag>) tagDao.findAll();
+        List<Tag> tags = (List<Tag>) tagDao.findAll();
+
+        if (tags.isEmpty()) {
+            throw new NoSuchEntryException("Теги не найдены");
+        }
+
+        return tags;
     }
 
-    public List<Tag> getAllTagsByClass(Tag.TagClass tagClassEnum) {
-        return tagDao.getTagsByTagClass(tagClassEnum);
+    public List<Tag> getByNames(List<String> names) {
+        List<Tag> tags = tagDao.findAllByTagNameIn(names);
+
+        if (tags.isEmpty()) {
+            throw new NoSuchEntryException("Теги не найдены");
+        }
+
+        return tags;
+    }
+
+
+    public List<Tag> getAllTagsByClass(String className) {
+        Tag.TagClass tagClass = Tag.TagClass.from(className);
+        List<Tag> tags = tagDao.getTagsByTagClass(tagClass);
+
+        if (tags.isEmpty()) {
+            throw new NoSuchEntryException("Теги не найдены");
+        }
+
+        return tags;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.cat.mapper;
 
-import com.example.cat.dto.EventDto;
+import com.example.cat.dto.EventDtoOne;
 import com.example.cat.dto.TagDto;
 import com.example.cat.model.Event;
 import com.example.cat.model.Tag;
@@ -19,20 +19,20 @@ public interface EventMapper {
 
 
     @Named("eventToEventDto")
-    default EventDto eventToEventDto(Event event) {
+    default EventDtoOne eventToEventDto(Event event) {
         if (event == null) {
             return null;
         }
 
-        EventDto eventDto = new EventDto();
+        EventDtoOne eventDtoOne = new EventDtoOne();
 
-        eventDto.setId(event.getId());
-        eventDto.setTitle(event.getTitle());
-        eventDto.setLatitude(event.getLatitude());
-        eventDto.setLongitude(event.getLongitude());
-        eventDto.setCreatorId(event.getCreator().getId());
-        eventDto.setCreatorName(event.getCreator().getLogin());
-        eventDto.setMembers(event.getMembers());
+        eventDtoOne.setId(event.getId());
+        eventDtoOne.setTitle(event.getTitle());
+        eventDtoOne.setLatitude(event.getLatitude());
+        eventDtoOne.setLongitude(event.getLongitude());
+        eventDtoOne.setCreatorId(event.getCreator().getId());
+        eventDtoOne.setCreatorName(event.getCreator().getLogin());
+        eventDtoOne.setMembers(event.getMembers());
 
         List<TagDto> dtoList = new ArrayList<>();
         for (Tag tag : event.getTags()) {
@@ -40,21 +40,21 @@ public interface EventMapper {
             dtoList.add(tagDto);
         }
 
-        eventDto.setTags(dtoList);
+        eventDtoOne.setTags(dtoList);
 
-        return eventDto;
+        return eventDtoOne;
 
     }
 
 
     @Named("eventDtoToEvent")
-    Event eventDtoToEvent(EventDto eventDto);
+    Event eventDtoToEvent(EventDtoOne eventDtoOne);
 
     @IterableMapping(qualifiedByName = "eventDtoToEvent")
-    List<Event> eventsDtoToEvents(List<EventDto> usersDto);
+    List<Event> eventsDtoToEvents(List<EventDtoOne> usersDto);
 
     @IterableMapping(qualifiedByName = "eventToEventDto")
-    List<EventDto> eventsToEventsDto(List<Event> users);
+    List<EventDtoOne> eventsToEventsDto(List<Event> users);
 
     @IterableMapping(qualifiedByName = "lazyEventToEventDto")
     List<Event> lazyEventsToEventsDto(List<Event> events);

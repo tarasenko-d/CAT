@@ -37,7 +37,7 @@ public class Tag {
         SPORT("Спорт"),
         POPCULTURE("Поп-культура"),
         HOBBY("Хобби"),
-        PASTTIME("Времяпрепровождение");
+        PASTIME("Времяпрепровождение");
 
         @Getter
         private final String value;

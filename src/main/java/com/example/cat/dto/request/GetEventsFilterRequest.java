@@ -1,6 +1,9 @@
 package com.example.cat.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,11 +11,13 @@ import java.util.List;
 @Data
 public class GetEventsFilterRequest {
     private EventFilter eventFilter;
-    private PageInfo pageInfo;
+    private PaginationInfo paginationInfo;
 
     @Data
+    @Accessors(chain = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class EventFilter {
-
         private String title;
         private LocalDateTime dateTimeFrom;
         private LocalDateTime dateTimeTo;
@@ -21,13 +26,12 @@ public class GetEventsFilterRequest {
         private Integer radius;
         private String creatorName;
         private List<String> tags;
-
     }
 
-    @Data
-    public static class PageInfo {
-        private int page;
-        private int size;
+    public GetEventsFilterRequest() {
+        this.eventFilter = new EventFilter();
+        this.paginationInfo = new PaginationInfo()
+                .setPage(0)
+                .setSize(1);
     }
-
 }

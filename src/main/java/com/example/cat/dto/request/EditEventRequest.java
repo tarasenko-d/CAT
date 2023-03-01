@@ -4,7 +4,8 @@ import com.example.cat.dto.EventDto;
 import lombok.Data;
 
 @Data
-public class CreateEventRequest {
+public class EditEventRequest {
+
     private EventDto.EventInfo eventInfo;
 
 }

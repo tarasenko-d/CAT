@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Repository
@@ -15,5 +16,7 @@ public interface TagDao extends CrudRepository<Tag, Long> {
     Optional<Tag> findById(Long aLong);
 
     List<Tag> getTagsByTagClass(Tag.TagClass tagClassEnum);
+
+    List<Tag> findAllByTagNameIn(List<String> names);
 
 }

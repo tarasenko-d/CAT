@@ -36,7 +36,7 @@ public class RunAfterStartup {
     @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
 
-        Tag coffeeTag = new Tag("Кофе",Tag.TagClass.PASTTIME);
+        Tag coffeeTag = new Tag("Кофе",Tag.TagClass.PASTIME);
         Tag gamesTag = new Tag("Игры",Tag.TagClass.HOBBY);
         Tag filmTag = new Tag("Фильмы",Tag.TagClass.POPCULTURE);
         List<Tag> tags = List.of(coffeeTag,gamesTag);
