@@ -15,8 +15,8 @@ public class UserDto {
     private String login;
     private String password;
     private String userPicture;
-    private List<EventDtoOne> createdEvents;
+    private List<EventDto.EventInfo> createdEvents;
     private List<TagDto> favouriteTags;
-    private List<EventDtoOne> addedEvents;
+    private List<EventDto.EventInfo> addedEvents;
 
 }

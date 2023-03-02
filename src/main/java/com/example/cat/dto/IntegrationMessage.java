@@ -25,6 +25,14 @@ public class IntegrationMessage<T> {
         return successGetResponse(event);
     }
 
+    public static IntegrationMessage<DeleteByIdResponse> successDeleteResponse(Long id){
+        return successDeleteResponse(id);
+    }
+
+   public static IntegrationMessage<EditEventResponse> successEditResponse (Event event){
+        return successEditResponse(event);
+    }
+
     public static IntegrationMessage<GetEventsFilterResponse> successGetResponse(List<Event> events) {
         return successGetResponse(events);
     }
@@ -41,7 +49,21 @@ public class IntegrationMessage<T> {
         return response;
     }
 
+    private static <T> IntegrationMessage<T> successEditResponse(T data) {
+        IntegrationMessage<T> response = new IntegrationMessage<>();
+        response.setData(data);
+        response.setStatus(Status.SUCCESS);
+        return response;
+    }
+
     private static <T> IntegrationMessage<T> successCreateResponse(T data) {
+        IntegrationMessage<T> response = new IntegrationMessage<>();
+        response.setData(data);
+        response.setStatus(Status.SUCCESS);
+        return response;
+    }
+
+    private static <T> IntegrationMessage<T> successDeleteResponse(T data) {
         IntegrationMessage<T> response = new IntegrationMessage<>();
         response.setData(data);
         response.setStatus(Status.SUCCESS);

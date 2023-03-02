@@ -7,9 +7,11 @@ import java.util.List;
 
 @Data
 public class EventDto {
+private EventInfo eventInfo;
 
     @Data
     public static class EventInfo {
+
         private long id;
         private String title;
         private LocalDateTime dateTime;

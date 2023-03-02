@@ -17,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ public class EventService {
 
 
     @Transactional
-    public void saveEvent(EventDto.EventInfo eventInfo) {
+    public Event saveEvent(EventDto.EventInfo eventInfo) {
 
         Optional<User> creator = userDao.findById(eventInfo.getCreatorId());
         List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
@@ -47,10 +46,12 @@ public class EventService {
 
         Event event = EventProvider.generateEvent(eventInfo,creator.get(),tagList);
 
-        eventDao.save(event);
+       return eventDao.save(event);
+
     }
 
-    public void delete(long id) {
+    @Transactional
+    public void deleteEvent(long id) {
         Optional<Event> event = eventDao.findById(id);
         if (event.isEmpty()) {
             throw new NoSuchEntryException("Событие не найдено");
@@ -59,18 +60,20 @@ public class EventService {
     }
 
     @Transactional
-    public void edit(EventDto.EventInfo eventInfo) {
+    public Event editEvent(EventDto.EventInfo eventInfo) {
 
-        List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
-        List<User> userList = userDao.findAllByLoginIn(eventInfo.getMembers());
         Optional<Event> event = eventDao.findById(eventInfo.getId());
 
         if (event.isEmpty()){
             throw new NoSuchEntryException("Событие не найдено");
         }
+
+        List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
+        List<User> userList = userDao.findAllByLoginIn(eventInfo.getMembers());
+
         Event updatedEvent = EventChanger.changeEvent(eventInfo,userList,tagList,event.get());
 
-        eventDao.save(updatedEvent);
+        return eventDao.save(updatedEvent);
     }
 
     public List<Event> getEvents(PaginationInfo paginationInfo) {

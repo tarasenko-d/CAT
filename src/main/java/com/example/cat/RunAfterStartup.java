@@ -1,18 +1,12 @@
 package com.example.cat;
 
 
-import com.example.cat.model.Event;
-import com.example.cat.model.Tag;
-import com.example.cat.model.User;
 import com.example.cat.service.EventService;
 import com.example.cat.service.TagService;
 import com.example.cat.service.UserService;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class RunAfterStartup {
@@ -33,7 +27,7 @@ public class RunAfterStartup {
         System.out.println("Context has been started");
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+  /*  @EventListener(ApplicationReadyEvent.class)
     public void runAfterStartup() {
 
         Tag coffeeTag = new Tag("Кофе",Tag.TagClass.PASTIME);
@@ -83,5 +77,5 @@ public class RunAfterStartup {
         }
         System.out.println("-----");
     }
-
+*/
 }
