@@ -14,15 +14,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TagMapper {
 
-    @Named("tagDtoToTag")
-    default Tag tagDtoToTag(TagDto tagDto) {
-        Tag tag = new Tag();
-        tag.setTagName(tagDto.getTagName());
-        tag.setTagClass(Tag.TagClass.valueOf(tagDto.getTagName()));
-        return tag;
-    }
-
-    @Named("tagToTagDto")
     default TagDto tagToTagDto(Tag tag) {
         TagDto tagDto = new TagDto();
         tagDto.setTagName(tag.getTagName());
@@ -30,10 +21,5 @@ public interface TagMapper {
         return tagDto;
     }
 
-    @IterableMapping(qualifiedByName = "tagToTagDto")
-    List<TagDto> tagsToTagsDto(List<Tag> role);
-
-    @IterableMapping(qualifiedByName = "tagDtoToTag")
-    List<Tag> tagsDtoToTags(List<TagDto> role);
-
+//    List<TagDto> tagsToTagsDto(List<Tag> role);
 }

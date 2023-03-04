@@ -1,99 +1,74 @@
 package com.example.cat.dto;
 
-import com.example.cat.dto.response.*;
-import com.example.cat.model.Event;
-import com.example.cat.model.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.util.Optional;
 
 @Data
+@SuppressWarnings("rawtypes")
 public class IntegrationMessage<T> {
-
+    private Context context;
+    private T payload;
     private Status status;
-    private T data;
-    private Description description;
+    private Fault fault;
 
-    public static IntegrationMessage<CreateEventResponse> successCreateResponse(Event event) {
-        return successCreateResponse(event);
-    }
-
-    public static IntegrationMessage<GetEventByIdResponse> successGetResponse(Event event) {
-        return successGetResponse(event);
-    }
-
-    public static IntegrationMessage<DeleteByIdResponse> successDeleteResponse(Long id){
-        return successDeleteResponse(id);
-    }
-
-   public static IntegrationMessage<EditEventResponse> successEditResponse (Event event){
-        return successEditResponse(event);
-    }
-
-    public static IntegrationMessage<GetEventsFilterResponse> successGetResponse(List<Event> events) {
-        return successGetResponse(events);
-    }
-
-    public static IntegrationMessage<GetUserByIdResponse> successGetResponse(User user) {
-        return successGetResponse(user);
-    }
-
-
-    private static <T> IntegrationMessage<T> successGetResponse(T data) {
+    public static <T> IntegrationMessage<T> successResponse(T data, IntegrationMessage request) {
         IntegrationMessage<T> response = new IntegrationMessage<>();
-        response.setData(data);
+
+        response.setPayload(data);
+
+        Context context = new Context();
+        context.setResponse(new Context.Response().setCorrelationId(getMessageUid(request)));
+
         response.setStatus(Status.SUCCESS);
+        response.setContext(context);
+
         return response;
     }
 
-    private static <T> IntegrationMessage<T> successEditResponse(T data) {
-        IntegrationMessage<T> response = new IntegrationMessage<>();
-        response.setData(data);
-        response.setStatus(Status.SUCCESS);
-        return response;
-    }
-
-    private static <T> IntegrationMessage<T> successCreateResponse(T data) {
-        IntegrationMessage<T> response = new IntegrationMessage<>();
-        response.setData(data);
-        response.setStatus(Status.SUCCESS);
-        return response;
-    }
-
-    private static <T> IntegrationMessage<T> successDeleteResponse(T data) {
-        IntegrationMessage<T> response = new IntegrationMessage<>();
-        response.setData(data);
-        response.setStatus(Status.SUCCESS);
-        return response;
-    }
-
-    public static <T> IntegrationMessage<T> exceptionResponse(String message) {
+    public static <T> IntegrationMessage<T> exceptionResponse(String message, IntegrationMessage request) {
         IntegrationMessage<T> response = new IntegrationMessage<>();
 
-        Description desc = new Description();
-        desc.setDescription(message);
+        Fault fault = new Fault();
+        fault.setDescription(message);
+
+        Context context = new Context();
+        context.setResponse(new Context.Response().setCorrelationId(getMessageUid(request)));
 
         response.setStatus(Status.EXCEPTION);
-        response.setDescription(desc);
+        response.setFault(fault);
+        response.setContext(context);
 
         return response;
     }
 
-    public static <T> IntegrationMessage<T> errorResponse(String message) {
+    public static <T> IntegrationMessage<T> errorResponse(String message, IntegrationMessage request) {
         IntegrationMessage<T> response = new IntegrationMessage<>();
 
-        Description desc = new Description();
-        desc.setDescription(message);
+        Fault fault = new Fault();
+        fault.setDescription(message);
+
+        Context context = new Context();
+
+        context.setResponse(new Context.Response().setCorrelationId(getMessageUid(request)));
 
         response.setStatus(Status.ERROR);
-        response.setDescription(desc);
+        response.setFault(fault);
+        response.setContext(context);
 
         return response;
     }
 
+    private static String getMessageUid(IntegrationMessage request) {
+        return Optional.ofNullable(request)
+                .map(IntegrationMessage::getContext)
+                .map(Context::getRequest)
+                .map(Context.Request::getMessageUid)
+                .orElse("");
+    }
 
     @RequiredArgsConstructor
     private enum Status {
@@ -101,12 +76,32 @@ public class IntegrationMessage<T> {
         ERROR("error"),
         EXCEPTION("exception");
 
+        @Getter
         private final String value;
     }
 
-    @Getter
-    @Setter
-    private static class Description {
+    @Data
+    @Accessors(chain = true)
+    private static class Fault {
         private String description;
+    }
+
+    @Data
+    @Accessors(chain = true)
+    private static class Context {
+        private Request request;
+        private Response response;
+
+        @Data
+        @Accessors(chain = true)
+        private static class Request {
+            private String messageUid;
+        }
+
+        @Data
+        @Accessors(chain = true)
+        private static class Response {
+            private String correlationId;
+        }
     }
 }

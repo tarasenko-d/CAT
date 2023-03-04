@@ -32,7 +32,8 @@ public interface EventMapper {
         eventDtoOne.setLongitude(event.getLongitude());
         eventDtoOne.setCreatorId(event.getCreator().getId());
         eventDtoOne.setCreatorName(event.getCreator().getLogin());
-        eventDtoOne.setMembers(event.getMembers());
+        //TODO: исправить
+//        eventDtoOne.setMembers(event.getMembers());
 
         List<TagDto> dtoList = new ArrayList<>();
         for (Tag tag : event.getTags()) {
@@ -47,17 +48,7 @@ public interface EventMapper {
     }
 
 
-    @Named("eventDtoToEvent")
-    Event eventDtoToEvent(EventDtoOne eventDtoOne);
-
-    @IterableMapping(qualifiedByName = "eventDtoToEvent")
-    List<Event> eventsDtoToEvents(List<EventDtoOne> usersDto);
 
     @IterableMapping(qualifiedByName = "eventToEventDto")
     List<EventDtoOne> eventsToEventsDto(List<Event> users);
-
-    @IterableMapping(qualifiedByName = "lazyEventToEventDto")
-    List<Event> lazyEventsToEventsDto(List<Event> events);
-
-
 }

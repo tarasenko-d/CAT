@@ -6,6 +6,5 @@ import lombok.Data;
 
 @Data
 public class GetUserByIdResponse {
-
     private UserDto userDto;
 }

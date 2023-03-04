@@ -1,24 +1,23 @@
 package com.example.cat.model;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.Arrays;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name = "tags")
+@NoArgsConstructor
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, length = 25)
     private String tagName;
 
@@ -42,14 +41,11 @@ public class Tag {
         @Getter
         private final String value;
 
-        public static TagClass from (String tagClassName){
+        public static TagClass from(String tagClassName) {
             return Arrays.stream(TagClass.values())
                     .filter(val -> val.getValue().equals(tagClassName))
                     .findFirst()
-                    .orElseThrow(()->new EnumConstantNotPresentException(TagClass.class,"No such tagClass:"+tagClassName));
+                    .orElseThrow(() -> new EnumConstantNotPresentException(TagClass.class, "No such tagClass:" + tagClassName));
         }
-
     }
-
-
 }

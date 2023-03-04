@@ -1,11 +1,17 @@
 package com.example.cat.dto.response;
 
 
-import com.example.cat.dto.EventDto;
 import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class CreateEventResponse {
-
-private EventDto.EventInfo eventInfo;
+    private long id;
+    private String title;
+    private LocalDateTime dateTime;
+    private double latitude;
+    private double longitude;
+    private List<String> tags;
 }

@@ -1,6 +1,6 @@
 package com.example.cat.dto.request;
 
-import lombok.Data;
+import com.example.cat.dto.PaginationInfo;
 
 public class GetTagsRequest {
     private PaginationInfo paginationInfo;

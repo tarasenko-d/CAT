@@ -7,11 +7,10 @@ import java.util.List;
 
 @Data
 public class EventDto {
-private EventInfo eventInfo;
+    private EventInfo eventInfo;
 
     @Data
     public static class EventInfo {
-
         private long id;
         private String title;
         private LocalDateTime dateTime;
@@ -21,6 +20,5 @@ private EventInfo eventInfo;
         private String creatorName;
         private List<String> members;
         private List<String> tags;
-
     }
 }

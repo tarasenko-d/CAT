@@ -21,5 +21,4 @@ public class EventDtoOne {
     private String creatorName;
     private List<UserDto> members;
     private List<TagDto> tags;
-
 }

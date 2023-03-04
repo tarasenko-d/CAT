@@ -13,6 +13,4 @@ public interface EventDao extends CrudRepository<Event, Long> {
     List<Event> getEventsByTitle(String title);
 
     Page<Event> findAll(Pageable pageable);
-
-
 }

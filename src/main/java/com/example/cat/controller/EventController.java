@@ -1,12 +1,12 @@
 package com.example.cat.controller;
 
 
-import com.example.cat.dto.EventDto;
 import com.example.cat.dto.IntegrationMessage;
+import com.example.cat.dto.PaginationInfo;
 import com.example.cat.dto.request.*;
-import com.example.cat.mapper.EventMapper;
 import com.example.cat.model.Event;
 import com.example.cat.service.EventService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,118 +14,104 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
-
 @RestController
+@SuppressWarnings("rawtypes")
+@RequiredArgsConstructor
 public class EventController {
+    private final EventService eventService;
 
-    private EventService eventService;
-    private EventMapper eventMapper;
-
-    public EventController(EventService eventService, EventMapper eventMapper) {
-        this.eventService = eventService;
-        this.eventMapper = eventMapper;
-    }
-
-    @PostMapping("/rest/events")
-    public IntegrationMessage getEventList(@RequestBody IntegrationMessage<GetEventsFilterRequest> filterMessage) {
+    @PostMapping("/getFilterEvents")
+    public IntegrationMessage getFilterEvents(@RequestBody IntegrationMessage<GetEventsFilterRequest> request) {
         try {
-            PaginationInfo paginationInfo = Optional.ofNullable(filterMessage)
-                    .map(IntegrationMessage::getData)
-                    .map(GetEventsFilterRequest::getPaginationInfo)
-                    .orElse(null);
+            Optional<PaginationInfo> paginationInfo = Optional.ofNullable(request)
+                    .map(IntegrationMessage::getPayload)
+                    .map(GetEventsFilterRequest::getPaginationInfo);
 
-            if (isNull(paginationInfo)) {
-                return IntegrationMessage.errorResponse("Не введена информация о пагинации");
+            if (paginationInfo.isEmpty()) {
+                return IntegrationMessage.errorResponse("Не введена информация о пагинации", request);
             }
 
-            List<Event> events = eventService.getEvents(paginationInfo);
+            List<Event> events = eventService.getEvents(paginationInfo.get());
 
-            return IntegrationMessage.successGetResponse(events);
+            return IntegrationMessage.successResponse(events, request);
         } catch (Exception exception) {
-            return IntegrationMessage.exceptionResponse(exception.getMessage());
+            return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
     }
 
-    @PostMapping("/rest/events/eventById")
-    public IntegrationMessage getEvent(@RequestBody IntegrationMessage<GetEventByIdRequest> getMessage) {
+    @PostMapping("/getEventsById")
+    public IntegrationMessage getEventsById(@RequestBody IntegrationMessage<GetEventByIdRequest> request) {
         try {
-            Long eventId = Optional.ofNullable(getMessage)
-                    .map(IntegrationMessage::getData)
-                    .map(GetEventByIdRequest::getEventId)
-                    .orElse(null);
+            Optional<Long> eventId = Optional.ofNullable(request)
+                    .map(IntegrationMessage::getPayload)
+                    .map(GetEventByIdRequest::getEventId);
 
-            if (isNull(eventId)) {
-                return IntegrationMessage.errorResponse("Событие не найдено");
+            if (eventId.isEmpty()) {
+                return IntegrationMessage.errorResponse("Событие не найдено", request);
             }
 
-            Event event = eventService.getEventById(eventId);
+            Event event = eventService.getEventById(eventId.get());
 
-            return IntegrationMessage.successGetResponse(event);
+            return IntegrationMessage.successResponse(event, request);
         } catch (Exception exception) {
-            return IntegrationMessage.exceptionResponse(exception.getMessage());
+            return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
     }
 
-    @PostMapping("/rest/events/newEvent")
-    public IntegrationMessage createEvent(@RequestBody IntegrationMessage<CreateEventRequest> createMessage) {
+    @PostMapping("/createEvent")
+    public IntegrationMessage createEvent(@RequestBody IntegrationMessage<CreateEventRequest> request) {
         try {
-            EventDto.EventInfo eventInfo = Optional.ofNullable(createMessage)
-                    .map(IntegrationMessage::getData)
-                    .map(CreateEventRequest::getEventInfo)
-                    .orElse(null);
+            Optional<CreateEventRequest.Info> data = Optional.ofNullable(request)
+                    .map(IntegrationMessage::getPayload)
+                    .map(CreateEventRequest::getData);
 
-            if (isNull(eventInfo)) {
-                return IntegrationMessage.errorResponse("Данные события не введены");
+            if (data.isEmpty()) {
+                return IntegrationMessage.errorResponse("Данные события не введены", request);
             }
 
-            Event event = eventService.saveEvent(eventInfo);
+            Event event = eventService.saveEvent(data.get());
 
-            return IntegrationMessage.successGetResponse(event);
+            return IntegrationMessage.successResponse(event, request);
         } catch (Exception exception) {
-            return IntegrationMessage.exceptionResponse(exception.getMessage());
+            return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
     }
 
-    @PostMapping("/rest/events/deleteEvent")
-    public IntegrationMessage deleteEvent(@RequestBody IntegrationMessage<DeleteEventByIdRequest> deleteMessage) {
+    @PostMapping("/deleteEvent")
+    public IntegrationMessage deleteEvent(@RequestBody IntegrationMessage<DeleteEventByIdRequest> request) {
         try {
-            Long eventId = Optional.ofNullable(deleteMessage)
-                    .map(IntegrationMessage::getData)
-                    .map(DeleteEventByIdRequest::getEventId)
-                    .orElse(null);
+            Optional<Long> eventId = Optional.ofNullable(request)
+                    .map(IntegrationMessage::getPayload)
+                    .map(DeleteEventByIdRequest::getEventId);
 
-            if (isNull(eventId)) {
-                return IntegrationMessage.errorResponse("Событие не найдено");
+            if (eventId.isEmpty()) {
+                return IntegrationMessage.errorResponse("Событие не найдено", request);
             }
 
-            eventService.deleteEvent(eventId);
+            eventService.deleteEvent(eventId.get());
 
-            return IntegrationMessage.successDeleteResponse(eventId);
+            return IntegrationMessage.successResponse(eventId, request);
         } catch (Exception exception) {
-            return IntegrationMessage.exceptionResponse(exception.getMessage());
+            return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
     }
 
-
-    @PostMapping("/rest/events/editEvent")
-    public IntegrationMessage editEvent(@RequestBody IntegrationMessage<EditEventRequest> editMessage) {
+    @PostMapping("/editEvent")
+    public IntegrationMessage editEvent(@RequestBody IntegrationMessage<EditEventRequest> request) {
         try {
-            EventDto.EventInfo eventInfo = Optional.ofNullable(editMessage)
-                    .map(IntegrationMessage::getData)
-                    .map(EditEventRequest::getEventInfo)
-                    .orElse(null);
+            Optional<EditEventRequest.Info> eventInfo = Optional.ofNullable(request)
+                    .map(IntegrationMessage::getPayload)
+                    .map(EditEventRequest::getData);
 
-            if (isNull(eventInfo)) {
-                return IntegrationMessage.errorResponse("Данные события не введены");
+            if (eventInfo.isEmpty()) {
+                return IntegrationMessage.errorResponse("Данные события не введены", request);
             }
 
-            Event editEvent = eventService.editEvent(eventInfo);
+            Event editEvent = eventService.editEvent(eventInfo.get());
 
-            return IntegrationMessage.successEditResponse(editEvent);
+            return IntegrationMessage.successResponse(editEvent, request);
         } catch (Exception exception) {
-            return IntegrationMessage.exceptionResponse(exception.getMessage());
+            return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
     }
-
 }

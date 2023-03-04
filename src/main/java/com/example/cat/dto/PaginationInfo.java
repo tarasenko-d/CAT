@@ -1,4 +1,4 @@
-package com.example.cat.dto.request;
+package com.example.cat.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,5 +1,6 @@
 package com.example.cat.dto.request;
 
+import com.example.cat.dto.PaginationInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

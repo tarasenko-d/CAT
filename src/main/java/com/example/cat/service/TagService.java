@@ -3,22 +3,20 @@ package com.example.cat.service;
 import com.example.cat.dao.TagDao;
 import com.example.cat.exception.NoSuchEntryException;
 import com.example.cat.model.Tag;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class TagService {
 
     private final TagDao tagDao;
+
     public TagService(TagDao tagDao) {
         this.tagDao = tagDao;
     }
-
 
     public void saveTag(Tag tag) {
         tagDao.save(tag);
@@ -36,8 +34,14 @@ public class TagService {
         }
 
         Tag tag = tagOptional.get();
-        if (tagEdit.getTagName() != null) tag.setTagName(tagEdit.getTagName());
-        if (tagEdit.getTagClass() != null) tag.setTagClass(tagEdit.getTagClass());
+
+        if (tagEdit.getTagName() != null) {
+            tag.setTagName(tagEdit.getTagName());
+        }
+        if (tagEdit.getTagClass() != null) {
+            tag.setTagClass(tagEdit.getTagClass());
+        }
+
         tagDao.save(tag);
     }
 
@@ -60,7 +64,6 @@ public class TagService {
 
         return tags;
     }
-
 
     public List<Tag> getAllTagsByClass(String className) {
         Tag.TagClass tagClass = Tag.TagClass.from(className);
