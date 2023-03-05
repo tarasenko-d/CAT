@@ -1,90 +1,112 @@
 package com.example.cat.service;
 
 import com.example.cat.dao.EventDao;
+import com.example.cat.dao.TagDao;
 import com.example.cat.dao.UserDao;
+import com.example.cat.dto.PaginationInfo;
+import com.example.cat.dto.request.CreateEventRequest;
+import com.example.cat.dto.request.EditEventRequest;
 import com.example.cat.exception.NoSuchEntryException;
 import com.example.cat.model.Event;
+import com.example.cat.model.Tag;
 import com.example.cat.model.User;
-import jakarta.transaction.Transactional;
+import com.example.cat.service.util.EventChanger;
+import com.example.cat.service.util.EventProvider;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EventService {
 
     private final EventDao eventDao;
     private final UserDao userDao;
-
-    public EventService(EventDao eventDao, UserDao userDao) {
-        this.eventDao = eventDao;
-        this.userDao = userDao;
-    }
-
+    private final TagDao tagDao;
 
     @Transactional
-    public void saveEvent(Event event) {
+    public Event saveEvent(CreateEventRequest.Info eventInfo) {
 
-        System.out.println("---- \n Event [" + event.getTitle() + "] has been saved");
+        long creatorId = eventInfo.getCreatorId();
+        Optional<User> creator = userDao.findById(creatorId);
 
-        Optional<User> userOptional = userDao.findById(event.getCreator().getId());
-        if (userOptional.isEmpty()) {
-            throw new NoSuchEntryException();
+        if (creator.isEmpty()) {
+            throw new NoSuchEntryException("Пользователя с id: " + creatorId + " не существует");
         }
-        List<User> userList = new ArrayList<>();
-        userList.add(userOptional.get());
-        event.setMembers(userList);
-        eventDao.save(event);
+
+        List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
+        Event event = EventProvider.generateEvent(eventInfo, creator.get(), tagList);
+
+        return eventDao.save(event);
     }
 
-    public void delete(Event event) {
-        eventDao.delete(event);
+    @Transactional
+    public void deleteEvent(long id) {
+        Optional<Event> event = eventDao.findById(id);
+
+        if (event.isEmpty()) {
+            throw new NoSuchEntryException("Событие не найдено");
+        }
+
+        eventDao.delete(event.get());
     }
 
-    public void edit(Event event) {
+    @Transactional
+    public Event editEvent(EditEventRequest.Info eventInfo) {
+        Optional<Event> event = eventDao.findById(eventInfo.getId());
+
+        if (event.isEmpty()) {
+            throw new NoSuchEntryException("Событие не найдено");
+        }
+
+        List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
+        List<User> userList = userDao.findAllByLoginIn(eventInfo.getMembers());
+
+        Event updatedEvent = EventChanger.changeEvent(eventInfo, userList, tagList, event.get());
+
+        return eventDao.save(updatedEvent);
     }
 
-    public List<Event> getEvents() {
-        List<Event> events = (List<Event>) eventDao.findAll();
-        for (Event event : events) {
+    public List<Event> getEvents(PaginationInfo paginationInfo) {
+        PageRequest pageable = PageRequest.of(paginationInfo.getPage(), paginationInfo.getSize());
+
+        Page<Event> events = eventDao.findAll(pageable);
+        for (Event event : events.getContent()) {
             Hibernate.initialize(event.getCreator());
             Hibernate.initialize(event.getMembers());
             Hibernate.initialize(event.getTags());
         }
-        return events;
+
+        return events.getContent();
     }
 
     public Event getEventById(long eventId) {
         Optional<Event> eventOptional = eventDao.findById(eventId);
+
         if (eventOptional.isEmpty()) {
-            throw new NoSuchEntryException("No event with id=" + eventId + ";");
+            throw new NoSuchEntryException("No event with id: " + eventId);
         }
+
         Event event = eventOptional.get();
         Hibernate.initialize(event.getMembers());
         Hibernate.initialize(event.getTags());
-        return event;
-    }
 
-    @Transactional
-    public List<Event> getFullInitializeEvents() {
-        List<Event> result = new ArrayList<>();
-        for (Event event : eventDao.findAll()) {
-            Hibernate.initialize(event.getMembers());
-            Hibernate.initialize(event.getTags());
-            result.add(event);
-        }
-        return result;
+        return event;
     }
 
     public List<Event> getEventsByTitle(String title) {
         List<Event> events = eventDao.getEventsByTitle(title);
+
         if (events.isEmpty()) {
             throw new NoSuchEntryException();
         }
+
         return events;
     }
-
 }

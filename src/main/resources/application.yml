@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    properties:
+      hibernate.show_sql: true
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8081
+

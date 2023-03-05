@@ -9,13 +9,13 @@ import java.util.List;
 
 public class EventProvider {
 
-    public static Event generateEvent(CreateEventRequest.EventInfo eventInfo, User creator, List<Tag> tags) {
+    public static Event generateEvent(CreateEventRequest.Info eventInfo, User creator, List<Tag> tags) {
 
         Event event = new Event();
 
         event.setCreator(creator);
         event.setTitle(eventInfo.getTitle());
-        event.setDateTime(eventInfo.getDateTime());
+        event.setEventDate(eventInfo.getDateTime());
 
         event.setLatitude(eventInfo.getLatitude());
         event.setLatitude(eventInfo.getLatitude());

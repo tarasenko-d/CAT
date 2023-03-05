@@ -1,23 +1,22 @@
-package com.example.cat.dto;
+package com.example.cat.dto.request;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class EventDto {
-    private EventInfo eventInfo;
+public class EditEventRequest {
+    private Info data;
 
     @Data
-    public static class EventInfo {
+    public static class Info {
         private long id;
         private String title;
-        private LocalDateTime dateTime;
+        private LocalDateTime eventDate;
         private double latitude;
         private double longitude;
-        private long creatorId;
-        private String creatorName;
         private List<String> members;
         private List<String> tags;
     }

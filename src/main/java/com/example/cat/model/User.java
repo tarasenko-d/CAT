@@ -1,11 +1,11 @@
 package com.example.cat.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -37,23 +37,4 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     @ManyToMany
     private List<Event> addedEvents;
-
-
-    @Override
-    public String toString() {
-        return "User[" + id +
-                "] login = " + login;
-    }
-
-    public String fullString() {
-        return "User[" + id +
-                "]\n  login = " + login +
-                "\n  password = " + password +
-                "\n  userPicture = " + userPicture +
-                "\n  createdEvents = " + createdEvents +
-               // "\n  favouriteTag=" + favouriteTag +
-                "\n  addedEvents = " + addedEvents;
-    }
-
-
 }

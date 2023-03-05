@@ -3,8 +3,8 @@ package com.example.cat.service;
 import com.example.cat.dao.TagDao;
 import com.example.cat.exception.NoSuchEntryException;
 import com.example.cat.model.Tag;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +13,10 @@ import java.util.Optional;
 public class TagService {
 
     private final TagDao tagDao;
+
     public TagService(TagDao tagDao) {
         this.tagDao = tagDao;
     }
-
 
     public void saveTag(Tag tag) {
         tagDao.save(tag);
@@ -34,16 +34,45 @@ public class TagService {
         }
 
         Tag tag = tagOptional.get();
-        if (tagEdit.getTagName() != null) tag.setTagName(tagEdit.getTagName());
-        if (tagEdit.getTagClass() != null) tag.setTagClass(tagEdit.getTagClass());
+
+        if (tagEdit.getTagName() != null) {
+            tag.setTagName(tagEdit.getTagName());
+        }
+        if (tagEdit.getTagClass() != null) {
+            tag.setTagClass(tagEdit.getTagClass());
+        }
+
         tagDao.save(tag);
     }
 
     public List<Tag> getAllTags() {
-        return (List<Tag>) tagDao.findAll();
+        List<Tag> tags = (List<Tag>) tagDao.findAll();
+
+        if (tags.isEmpty()) {
+            throw new NoSuchEntryException("Теги не найдены");
+        }
+
+        return tags;
     }
 
-    public List<Tag> getAllTagsByClass(Tag.TagClass tagClassEnum) {
-        return tagDao.getTagsByTagClass(tagClassEnum);
+    public List<Tag> getByNames(List<String> names) {
+        List<Tag> tags = tagDao.findAllByTagNameIn(names);
+
+        if (tags.isEmpty()) {
+            throw new NoSuchEntryException("Теги не найдены");
+        }
+
+        return tags;
+    }
+
+    public List<Tag> getAllTagsByClass(String className) {
+        Tag.TagClass tagClass = Tag.TagClass.from(className);
+        List<Tag> tags = tagDao.getTagsByTagClass(tagClass);
+
+        if (tags.isEmpty()) {
+            throw new NoSuchEntryException("Теги не найдены");
+        }
+
+        return tags;
     }
 }
