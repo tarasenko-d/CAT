@@ -3,6 +3,7 @@ package com.example.cat.service;
 import com.example.cat.dao.TagDao;
 import com.example.cat.exception.NoSuchEntryException;
 import com.example.cat.model.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TagService {
-
     private final TagDao tagDao;
-
-    public TagService(TagDao tagDao) {
-        this.tagDao = tagDao;
-    }
 
     public void saveTag(Tag tag) {
         tagDao.save(tag);

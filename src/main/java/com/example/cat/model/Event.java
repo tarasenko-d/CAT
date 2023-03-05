@@ -1,19 +1,14 @@
 package com.example.cat.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "events")
-@NoArgsConstructor
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -23,19 +18,16 @@ public class Event {
     private double latitude;
     private double longitude;
     private LocalDateTime eventDate;
-
+    @ToString.Exclude
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "creator_id")
     private User creator;
-
+    @ToString.Exclude
     @ManyToMany
-    @JsonBackReference
     @JoinTable(name = "user_event",
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> members;
-
     @ManyToMany
     @JoinTable(name = "event_tag",
             joinColumns = {@JoinColumn(name = "event_id")},

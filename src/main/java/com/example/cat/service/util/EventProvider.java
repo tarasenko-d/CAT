@@ -15,7 +15,7 @@ public class EventProvider {
 
         event.setCreator(creator);
         event.setTitle(eventInfo.getTitle());
-        event.setEventDate(eventInfo.getDateTime());
+        event.setEventDate(eventInfo.getEventDate());
 
         event.setLatitude(eventInfo.getLatitude());
         event.setLatitude(eventInfo.getLatitude());

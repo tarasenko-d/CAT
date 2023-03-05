@@ -21,8 +21,9 @@ public class UserService {
     private final EventDao eventDao;
     private final UserDao userDao;
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         userDao.save(user);
+        return user;
     }
 
     public void delete(User user) {
@@ -57,12 +58,12 @@ public class UserService {
 
 
     public List<User> getUsers() {
-        return (List<User>) userDao.findAll();
+        return userDao.findAll();
     }
 
     @Transactional
     public List<User> getFullUsers() {
-        List<User> result = (List<User>) userDao.findAll();
+        List<User> result = userDao.findAll();
         for (User user : result) {
             Hibernate.initialize(user.getCreatedEvents());
             Hibernate.initialize(user.getAddedEvents());
@@ -73,7 +74,7 @@ public class UserService {
 
     @Transactional
     public List<User> getUsersWithAddedEvents() {
-        List<User> result = (List<User>) userDao.findAll();
+        List<User> result = userDao.findAll();
 
         for (User user : result) {
             Hibernate.initialize(user.getAddedEvents());
@@ -84,7 +85,7 @@ public class UserService {
 
     @Transactional
     public List<User> getUsersWithCreatedEvents() {
-        List<User> result = (List<User>) userDao.findAll();
+        List<User> result = userDao.findAll();
 
         for (User user : result) {
             Hibernate.initialize(user.getCreatedEvents());
@@ -94,35 +95,31 @@ public class UserService {
     }
 
     @Transactional
-    public void followEvent(Long userId, Long eventId) {
-        Optional<User> userOptional = userDao.findById(userId);
-        Optional<Event> eventOptional = eventDao.findById(eventId);
+    public User followEvent(Long userId, Long eventId) {
+        User user = Optional.ofNullable(userDao.findById(userId))
+                .orElseThrow(()->new NoSuchEntryException("Пользователь с id="+userId+" не найден"))
+                .get();
+        Event event = Optional.ofNullable(eventDao.findById(eventId))
+                .orElseThrow(()->new NoSuchEntryException("Событие с id="+eventId+" не найден"))
+                .get();
 
-        if (userOptional.isEmpty() || eventOptional.isEmpty()) {
-            throw new NoSuchEntryException();
-        }
-
-        User user = userOptional.get();
-        Event event = eventOptional.get();
         user.getAddedEvents().add(event);
 
-        userDao.save(user);
+        return userDao.save(user);
     }
 
     @Transactional
-    public void unfollowEvent(Long userId, Long eventId) {
-        Optional<User> userOptional = userDao.findById(userId);
-        Optional<Event> eventOptional = eventDao.findById(eventId);
+    public User unfollowEvent(Long userId, Long eventId) {
+        User user = Optional.ofNullable(userDao.findById(userId))
+                .orElseThrow(()->new NoSuchEntryException("Пользователь с id="+userId+" не найден"))
+                .get();
+        Event event = Optional.ofNullable(eventDao.findById(eventId))
+                .orElseThrow(()->new NoSuchEntryException("Событие с id="+eventId+" не найден"))
+                .get();
 
-        if (userOptional.isEmpty() || eventOptional.isEmpty()) {
-            throw new NoSuchEntryException();
-        }
-
-        User user = userOptional.get();
-        Event event = eventOptional.get();
         user.getAddedEvents().remove(event);
 
-        userDao.save(user);
+      return userDao.save(user);
     }
 
     public User getUserById(Long id) {

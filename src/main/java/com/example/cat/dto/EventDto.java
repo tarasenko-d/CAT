@@ -1,5 +1,6 @@
 package com.example.cat.dto;
 
+import com.example.cat.model.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,12 +14,11 @@ public class EventDto {
     public static class EventInfo {
         private long id;
         private String title;
-        private LocalDateTime dateTime;
+        private LocalDateTime eventDate;
         private double latitude;
         private double longitude;
-        private long creatorId;
-        private String creatorName;
-        private List<String> members;
+        private User creator;
+        private List<User> members;
         private List<String> tags;
     }
 }

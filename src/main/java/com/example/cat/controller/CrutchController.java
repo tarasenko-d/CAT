@@ -2,12 +2,15 @@ package com.example.cat.controller;
 
 import com.example.cat.dto.IntegrationMessage;
 import com.example.cat.dto.request.*;
+import com.example.cat.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/v1/api")
+@RestController
+@RequestMapping("/v1/api/")
 @SuppressWarnings("rawtypes")
 @RequiredArgsConstructor
 public class CrutchController {
@@ -26,7 +29,7 @@ public class CrutchController {
 
     @PostMapping("/events/create")
     public IntegrationMessage createEvent(@RequestBody IntegrationMessage<CreateEventRequest> request) {
-        return eventController.createEvent(request);
+        return eventController.createEvent(request, new User());
     }
 
     @PostMapping("/events/delete")
