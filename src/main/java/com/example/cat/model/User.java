@@ -1,20 +1,18 @@
 package com.example.cat.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
-
-@Setter
-@Getter
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -24,27 +22,15 @@ public class User {
     @Column(nullable = false, length = 35)
     private String password;
     private String userPicture;
-
+    @ToString.Exclude
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<Event> createdEvents;
-
     @OneToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
     private List<Tag> favouriteTags;
-
+    @ToString.Exclude
+    @ManyToMany
     @JoinTable(name = "user_event",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
-    @ManyToMany
-    @JsonBackReference
     private List<Event> addedEvents;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                '}';
-    }
 }

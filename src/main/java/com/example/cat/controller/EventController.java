@@ -5,6 +5,7 @@ import com.example.cat.dto.IntegrationMessage;
 import com.example.cat.dto.PaginationInfo;
 import com.example.cat.dto.request.*;
 import com.example.cat.model.Event;
+import com.example.cat.model.User;
 import com.example.cat.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,8 +59,9 @@ public class EventController {
         }
     }
 
-    @PostMapping("/events/creat")
-    public IntegrationMessage createEvent(@RequestBody IntegrationMessage<CreateEventRequest> request) {
+    @PostMapping("/createEvent")
+    // TODO: user -> principal
+    public IntegrationMessage createEvent(@RequestBody IntegrationMessage<CreateEventRequest> request, User user) {
         try {
             Optional<CreateEventRequest.Info> data = Optional.ofNullable(request)
                     .map(IntegrationMessage::getPayload)
@@ -69,7 +71,7 @@ public class EventController {
                 return IntegrationMessage.errorResponse("Данные события не введены", request);
             }
 
-            Event event = eventService.saveEvent(data.get());
+            Event event = eventService.saveEvent(data.get(), user);
 
             return IntegrationMessage.successResponse(event, request);
         } catch (Exception exception) {

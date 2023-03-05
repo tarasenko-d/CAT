@@ -20,8 +20,8 @@ public class GetEventsFilterRequest {
     @AllArgsConstructor
     public static class EventFilter {
         private String title;
-        private LocalDateTime dateTimeFrom;
-        private LocalDateTime dateTimeTo;
+        private LocalDateTime eventDateFrom;
+        private LocalDateTime eventDateTo;
         private Double latitude;
         private Double longitude;
         private Integer radius;

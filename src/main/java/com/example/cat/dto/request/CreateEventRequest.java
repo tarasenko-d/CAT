@@ -12,10 +12,9 @@ public class CreateEventRequest {
     @Data
     public static class Info {
         private String title;
-        private LocalDateTime dateTime;
+        private LocalDateTime eventDate;
         private double latitude;
         private double longitude;
-        private long creatorId;
         private List<String> tags;
     }
 }

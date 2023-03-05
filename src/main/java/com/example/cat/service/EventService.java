@@ -31,16 +31,10 @@ public class EventService {
     private final TagDao tagDao;
 
     @Transactional
-    public Event saveEvent(CreateEventRequest.Info eventInfo) {
+    public Event saveEvent(CreateEventRequest.Info eventInfo, User user) {
 
-        long creatorId = eventInfo.getCreatorId();
-        Optional<User> creator = userDao.findById(creatorId);
-
-        if (creator.isEmpty()) {
-            throw new NoSuchEntryException("Пользователя с id: " + creatorId + " не существует");
-        }
         List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
-        Event event = EventProvider.generateEvent(eventInfo, creator.get(), tagList);
+        Event event = EventProvider.generateEvent(eventInfo, user, tagList);
 
         return eventDao.save(event);
     }
@@ -97,15 +91,5 @@ public class EventService {
         Hibernate.initialize(event.getTags());
 
         return event;
-    }
-
-    public List<Event> getEventsByTitle(String title) {
-        List<Event> events = eventDao.getEventsByTitle(title);
-
-        if (events.isEmpty()) {
-            throw new NoSuchEntryException();
-        }
-
-        return events;
     }
 }
