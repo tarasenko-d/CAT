@@ -39,7 +39,6 @@ public class EventService {
         if (creator.isEmpty()) {
             throw new NoSuchEntryException("Пользователя с id: " + creatorId + " не существует");
         }
-
         List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
         Event event = EventProvider.generateEvent(eventInfo, creator.get(), tagList);
 
@@ -73,6 +72,7 @@ public class EventService {
         return eventDao.save(updatedEvent);
     }
 
+    @Transactional
     public List<Event> getEvents(PaginationInfo paginationInfo) {
         PageRequest pageable = PageRequest.of(paginationInfo.getPage(), paginationInfo.getSize());
 
@@ -82,7 +82,6 @@ public class EventService {
             Hibernate.initialize(event.getMembers());
             Hibernate.initialize(event.getTags());
         }
-
         return events.getContent();
     }
 

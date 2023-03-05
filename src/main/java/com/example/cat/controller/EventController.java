@@ -58,7 +58,7 @@ public class EventController {
         }
     }
 
-    @PostMapping("/createEvent")
+    @PostMapping("/events/creat")
     public IntegrationMessage createEvent(@RequestBody IntegrationMessage<CreateEventRequest> request) {
         try {
             Optional<CreateEventRequest.Info> data = Optional.ofNullable(request)
