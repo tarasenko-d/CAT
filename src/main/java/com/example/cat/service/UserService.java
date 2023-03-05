@@ -57,12 +57,12 @@ public class UserService {
 
 
     public List<User> getUsers() {
-        return (List<User>) userDao.findAll();
+        return userDao.findAll();
     }
 
     @Transactional
     public List<User> getFullUsers() {
-        List<User> result = (List<User>) userDao.findAll();
+        List<User> result = userDao.findAll();
         for (User user : result) {
             Hibernate.initialize(user.getCreatedEvents());
             Hibernate.initialize(user.getAddedEvents());
@@ -73,7 +73,7 @@ public class UserService {
 
     @Transactional
     public List<User> getUsersWithAddedEvents() {
-        List<User> result = (List<User>) userDao.findAll();
+        List<User> result = userDao.findAll();
 
         for (User user : result) {
             Hibernate.initialize(user.getAddedEvents());
@@ -84,7 +84,7 @@ public class UserService {
 
     @Transactional
     public List<User> getUsersWithCreatedEvents() {
-        List<User> result = (List<User>) userDao.findAll();
+        List<User> result = userDao.findAll();
 
         for (User user : result) {
             Hibernate.initialize(user.getCreatedEvents());

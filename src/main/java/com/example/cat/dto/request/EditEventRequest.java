@@ -1,7 +1,6 @@
 package com.example.cat.dto.request;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +11,7 @@ public class EditEventRequest {
 
     @Data
     public static class Info {
-        private long id;
+        private Long id;
         private String title;
         private LocalDateTime eventDate;
         private double latitude;

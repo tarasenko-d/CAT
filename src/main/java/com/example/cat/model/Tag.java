@@ -17,24 +17,16 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-
     @Column(nullable = false, unique = true, length = 25)
     private String tagName;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TagClass tagClass;
 
-    public Tag(String tagName, TagClass tagClass) {
-        this.tagName = tagName;
-        this.tagClass = tagClass;
-    }
-
     @RequiredArgsConstructor
     public enum TagClass {
-
         SPORT("Спорт"),
-        POPCULTURE("Поп-культура"),
+        POP_CULTURE("Поп-культура"),
         HOBBY("Хобби"),
         PASTIME("Времяпрепровождение");
 
