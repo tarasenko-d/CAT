@@ -4,7 +4,6 @@ import com.example.cat.dto.IntegrationMessage;
 import com.example.cat.dto.request.FollowEventRequest;
 import com.example.cat.dto.request.GetUserByIdRequest;
 import com.example.cat.dto.request.UnfollowEventRequest;
-import com.example.cat.model.Event;
 import com.example.cat.model.User;
 import com.example.cat.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/follow")
+    // TODO: user -> principal
     public IntegrationMessage followEvent(@RequestBody IntegrationMessage<FollowEventRequest> request) {
         try {
             Optional<Long> eventId = Optional.ofNullable(request)
@@ -69,8 +69,9 @@ public class UserController {
     }
 
     @PostMapping("/unfollow")
+    // TODO: user -> principal
     public IntegrationMessage unfollowEvent(@RequestBody IntegrationMessage<UnfollowEventRequest> request) {
-        try{
+        try {
             Optional<Long> eventId = Optional.ofNullable(request)
                     .map(IntegrationMessage::getPayload)
                     .map(UnfollowEventRequest::getEventId);

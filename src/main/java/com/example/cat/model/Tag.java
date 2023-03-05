@@ -1,9 +1,6 @@
 package com.example.cat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -12,6 +9,7 @@ import java.util.Arrays;
 @Entity
 @Table(name = "tags")
 @AllArgsConstructor
+@NoArgsConstructor
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
