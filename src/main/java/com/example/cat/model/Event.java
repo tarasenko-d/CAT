@@ -1,18 +1,14 @@
 package com.example.cat.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "events")
-@NoArgsConstructor
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -22,9 +18,11 @@ public class Event {
     private double latitude;
     private double longitude;
     private LocalDateTime eventDate;
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "creator_id")
     private User creator;
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "user_event",
             joinColumns = {@JoinColumn(name = "event_id")},

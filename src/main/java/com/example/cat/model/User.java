@@ -1,16 +1,12 @@
 package com.example.cat.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
-
-@Setter
-@Getter
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -22,10 +18,12 @@ public class User {
     @Column(nullable = false, length = 35)
     private String password;
     private String userPicture;
+    @ToString.Exclude
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<Event> createdEvents;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Tag> favouriteTags;
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "user_event",
             joinColumns = {@JoinColumn(name = "user_id")},

@@ -1,18 +1,17 @@
 package com.example.cat.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Arrays;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "tags")
-@NoArgsConstructor
+@AllArgsConstructor
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

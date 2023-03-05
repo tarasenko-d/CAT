@@ -32,6 +32,7 @@ public class EventService {
 
     @Transactional
     public Event saveEvent(CreateEventRequest.Info eventInfo, User user) {
+
         List<Tag> tagList = tagDao.findAllByTagNameIn(eventInfo.getTags());
         Event event = EventProvider.generateEvent(eventInfo, user, tagList);
 
@@ -65,6 +66,7 @@ public class EventService {
         return eventDao.save(updatedEvent);
     }
 
+    @Transactional
     public List<Event> getEvents(PaginationInfo paginationInfo) {
         PageRequest pageable = PageRequest.of(paginationInfo.getPage(), paginationInfo.getSize());
 
@@ -74,7 +76,6 @@ public class EventService {
             Hibernate.initialize(event.getMembers());
             Hibernate.initialize(event.getTags());
         }
-
         return events.getContent();
     }
 
