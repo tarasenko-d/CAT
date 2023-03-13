@@ -6,6 +6,13 @@ spring:
       hibernate.show_sql: false
     hibernate:
       ddl-auto: update
+  application:
+    name: cat-persistence
+  cloud:
+    loadbalancer:
+        ribbon:
+          enabled: false
+
 server:
   port: 8081
 
