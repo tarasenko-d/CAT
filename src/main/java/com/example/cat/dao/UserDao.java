@@ -10,9 +10,13 @@ public interface UserDao extends CrudRepository<User, Long> {
 
     Optional<User> getUserById(Long id);
 
+    Optional<User> getUserByExternalId(Long id);
+
     User getUserByLogin(String login);
 
     List<User> findAllByLoginIn(List<String> names);
 
     List<User> findAll();
+
+    Boolean existsUserByLogin(String login);
 }

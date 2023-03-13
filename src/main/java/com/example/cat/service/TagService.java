@@ -16,6 +16,8 @@ public class TagService {
     private final TagDao tagDao;
 
     public void saveTag(Tag tag) {
+        String externalId = tag.getTagName().hashCode()+"_"+tag.getTagClass().hashCode()+"_"+System.nanoTime();
+        tag.setExternalId(externalId);
         tagDao.save(tag);
     }
 

@@ -1,6 +1,6 @@
 package com.example.cat.dto.response;
 
-import com.example.cat.dto.EventDto;
+import com.example.cat.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditEventResponse {
-    private EventDto data;
+public class GetUserByIdResponse {
+    private UserDto data;
 }

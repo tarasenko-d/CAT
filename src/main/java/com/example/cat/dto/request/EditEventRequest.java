@@ -14,8 +14,8 @@ public class EditEventRequest {
         private Long id;
         private String title;
         private LocalDateTime eventDate;
-        private double latitude;
-        private double longitude;
+        private Double latitude;
+        private Double longitude;
         private List<String> members;
         private List<String> tags;
     }

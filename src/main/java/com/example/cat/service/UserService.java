@@ -22,6 +22,8 @@ public class UserService {
     private final UserDao userDao;
 
     public User saveUser(User user) {
+        String externalId = user.getLogin().hashCode()+"_"+user.getPassword().hashCode()+"_"+System.nanoTime();
+        user.setExternalId(externalId);
         userDao.save(user);
         return user;
     }
@@ -62,45 +64,12 @@ public class UserService {
     }
 
     @Transactional
-    public List<User> getFullUsers() {
-        List<User> result = userDao.findAll();
-        for (User user : result) {
-            Hibernate.initialize(user.getCreatedEvents());
-            Hibernate.initialize(user.getAddedEvents());
-            Hibernate.initialize(user.getFavouriteTags());
-        }
-        return result;
-    }
-
-    @Transactional
-    public List<User> getUsersWithAddedEvents() {
-        List<User> result = userDao.findAll();
-
-        for (User user : result) {
-            Hibernate.initialize(user.getAddedEvents());
-        }
-
-        return result;
-    }
-
-    @Transactional
-    public List<User> getUsersWithCreatedEvents() {
-        List<User> result = userDao.findAll();
-
-        for (User user : result) {
-            Hibernate.initialize(user.getCreatedEvents());
-        }
-
-        return result;
-    }
-
-    @Transactional
     public User followEvent(Long userId, Long eventId) {
         User user = Optional.ofNullable(userDao.findById(userId))
-                .orElseThrow(()->new NoSuchEntryException("Пользователь с id="+userId+" не найден"))
+                .orElseThrow(() -> new NoSuchEntryException("Пользователь с id=" + userId + " не найден"))
                 .get();
         Event event = Optional.ofNullable(eventDao.findById(eventId))
-                .orElseThrow(()->new NoSuchEntryException("Событие с id="+eventId+" не найден"))
+                .orElseThrow(() -> new NoSuchEntryException("Событие с id=" + eventId + " не найден"))
                 .get();
 
         user.getAddedEvents().add(event);
@@ -111,22 +80,30 @@ public class UserService {
     @Transactional
     public User unfollowEvent(Long userId, Long eventId) {
         User user = Optional.ofNullable(userDao.findById(userId))
-                .orElseThrow(()->new NoSuchEntryException("Пользователь с id="+userId+" не найден"))
+                .orElseThrow(() -> new NoSuchEntryException("Пользователь с id=" + userId + " не найден"))
                 .get();
         Event event = Optional.ofNullable(eventDao.findById(eventId))
-                .orElseThrow(()->new NoSuchEntryException("Событие с id="+eventId+" не найден"))
+                .orElseThrow(() -> new NoSuchEntryException("Событие с id=" + eventId + " не найден"))
                 .get();
 
         user.getAddedEvents().remove(event);
 
-      return userDao.save(user);
+        return userDao.save(user);
     }
 
     public User getUserById(Long id) {
         return userDao.findById(id).orElseThrow(NoSuchEntryException::new);
     }
 
+    public User getUserByExternalId(Long id) {
+        return userDao.getUserByExternalId(id).orElseThrow(NoSuchEntryException::new);
+    }
+
     public User getUserByLogin(String name) {
         return userDao.getUserByLogin(name);
+    }
+
+    public Boolean userExist(String login) {
+        return userDao.existsUserByLogin(login);
     }
 }

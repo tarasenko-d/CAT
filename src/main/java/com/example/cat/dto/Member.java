@@ -3,8 +3,7 @@ package com.example.cat.dto;
 import lombok.Data;
 
 @Data
-public class TagDto {
+public class Member {
     private Long externalId;
-    private String tagName;
-    private String tagClass;
+    private String login;
 }

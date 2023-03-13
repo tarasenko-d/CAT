@@ -8,12 +8,12 @@ import java.util.Arrays;
 @Data
 @Entity
 @Table(name = "tags")
-@AllArgsConstructor
 @NoArgsConstructor
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String externalId;
     @Column(nullable = false, unique = true, length = 25)
     private String tagName;
     @Enumerated(EnumType.STRING)

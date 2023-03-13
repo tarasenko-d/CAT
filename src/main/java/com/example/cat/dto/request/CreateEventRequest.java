@@ -13,8 +13,8 @@ public class CreateEventRequest {
     public static class Info {
         private String title;
         private LocalDateTime eventDate;
-        private double latitude;
-        private double longitude;
+        private Double latitude;
+        private Double longitude;
         private List<String> tags;
     }
 }

@@ -1,9 +1,14 @@
 package com.example.cat.controller;
 
 
+import com.example.cat.dto.EventDto;
 import com.example.cat.dto.IntegrationMessage;
 import com.example.cat.dto.PaginationInfo;
 import com.example.cat.dto.request.*;
+import com.example.cat.dto.response.CreateEventResponse;
+import com.example.cat.dto.response.EditEventResponse;
+import com.example.cat.dto.response.GetEventByIdResponse;
+import com.example.cat.mapper.EventMapper;
 import com.example.cat.model.Event;
 import com.example.cat.model.User;
 import com.example.cat.service.EventService;
@@ -20,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
+    private final EventMapper eventMapper;
 
     @PostMapping("/getFilterEvents")
     public IntegrationMessage getFilterEvents(@RequestBody IntegrationMessage<GetEventsFilterRequest> request) {
@@ -52,8 +58,9 @@ public class EventController {
             }
 
             Event event = eventService.getEventById(eventId.get());
+            EventDto eventResponse = eventMapper.eventToEventDto(event);
 
-            return IntegrationMessage.successResponse(event, request);
+            return IntegrationMessage.successResponse(new GetEventByIdResponse(eventResponse), request);
         } catch (Exception exception) {
             return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
@@ -72,8 +79,9 @@ public class EventController {
             }
 
             Event event = eventService.saveEvent(data.get(), user);
+            EventDto eventResponse = eventMapper.eventToEventDto(event);
 
-            return IntegrationMessage.successResponse(event, request);
+            return IntegrationMessage.successResponse(new CreateEventResponse(eventResponse), request);
         } catch (Exception exception) {
             return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }
@@ -110,8 +118,9 @@ public class EventController {
             }
 
             Event editEvent = eventService.editEvent(eventInfo.get());
+            EventDto eventResponse = eventMapper.eventToEventDto(editEvent);
 
-            return IntegrationMessage.successResponse(editEvent, request);
+            return IntegrationMessage.successResponse(new EditEventResponse(eventResponse), request);
         } catch (Exception exception) {
             return IntegrationMessage.exceptionResponse(exception.getMessage(), request);
         }

@@ -11,13 +11,14 @@ import java.util.List;
 @Table(name = "events")
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String externalId;
     @Column(nullable = false, length = 50)
     private String title;
-    private double latitude;
-    private double longitude;
     private LocalDateTime eventDate;
+    private Double latitude;
+    private Double longitude;
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "creator_id")
@@ -33,4 +34,13 @@ public class Event {
             joinColumns = {@JoinColumn(name = "event_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private List<Tag> tags;
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", externalId=" + externalId +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

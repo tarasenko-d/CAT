@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EditEventResponse {
+public class CreateEventResponse {
     private EventDto data;
 }

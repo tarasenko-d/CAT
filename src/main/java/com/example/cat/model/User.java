@@ -15,8 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String externalId;
     @Column(nullable = false, unique = true, length = 25)
     private String login;
     @Column(nullable = false, length = 35)
@@ -33,4 +34,13 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private List<Event> addedEvents;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", externalId=" + externalId +
+                ", login='" + login + '\'' +
+                '}';
+    }
 }
